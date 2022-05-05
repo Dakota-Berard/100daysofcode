@@ -13,6 +13,29 @@ LONG_BREAK_MIN = 20
 reps = 0
 timer = None
 checkmark_str = ''
+pause_resume = 'Pause'
+pause_holder = ''
+pause_color = ''
+
+
+# ---------------------------- PAUSE BUTTON ------------------------------- #
+def pause():
+    global pause_resume
+    global reps
+    global pause_holder
+    global pause_color
+    if pause_resume == 'Pause':
+        pause_holder = timer_label.cget("text")
+        pause_color = timer_label.cget('fg')
+        pause_resume = 'Resume'
+        pause_button.config(text=pause_resume)
+        timer_label.config(text='Paused', fg=RED)
+        count_up(25*60)
+    else:
+        pause_resume = 'Pause'
+        pause_button.config(text=pause_resume)
+        timer_label.config(text=pause_holder, fg=pause_color)
+        window.after_cancel(timer)
 
 
 # ---------------------------- TIMER RESET ------------------------------- #
@@ -32,9 +55,9 @@ def start_timer():
     global reps
     reps += 1
 
-    work_sec = 5  # WORK_MIN * 60
-    short_break_sec = 5  # SHORT_BREAK_MIN * 60
-    long_break_sec = 5  # LONG_BREAK_MIN * 60
+    work_sec = WORK_MIN * 60
+    short_break_sec = SHORT_BREAK_MIN * 60
+    long_break_sec = LONG_BREAK_MIN * 60
 
     if reps % 2 == 1:
         timer_label.config(text="Working", fg=GREEN)
@@ -91,5 +114,10 @@ reset_button.grid(column=2, row=2)
 
 checkmark = Label(font=(FONT_NAME, 20, 'normal'), fg=GREEN, bg=YELLOW)
 checkmark.grid(column=1, row=3)
+
+
+pause_button = Button(text=pause_resume, font=(FONT_NAME, 10, 'normal'), command=pause)
+pause_button.grid(column=0, row=3)
+
 
 window.mainloop()
